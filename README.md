@@ -1,4 +1,11 @@
-# smart-terrarium-client
+# Smart Terrarium
+Client for connecting to Smart Terrarium to monitor:
+- Temperature
+- UV Index
+- Humidity
+- Soild Moisture of Plant
+- Water Level on Misting System
+- Water Level on drain
 
 ## Project setup
 ```
@@ -24,6 +31,3 @@ npm run test
 ```
 npm run lint
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).

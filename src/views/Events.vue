@@ -1,0 +1,158 @@
+<template>
+  <v-container>
+    <v-layout row wrap>
+      <v-snackbar v-model="showSaveNotification" :timeout="2400" top>
+        {{ saveMessage }}
+        <v-btn color="pink" flat @click="showSaveNotification = false">
+          Close
+        </v-btn>
+      </v-snackbar>
+      <v-flex xs12 class="relative">
+        <div class="display-1 font-weight-light text-uppercase">Events</div>
+        <v-divider />
+        <v-btn
+          absolute
+          dark
+          fab
+          top
+          right
+          small
+          color="primary"
+          @click="toggleForm"
+        >
+          <v-icon v-if="!showForm" title="Add New Event">calendar_today</v-icon>
+          <v-icon v-else title="Close Form">close</v-icon>
+        </v-btn>
+      </v-flex>
+      <v-flex xs12>
+        <p
+          class="title font-italic font-weight-medium pa-2 grey--text text--darken-2 "
+        >
+          Schedule lighting and misting events.
+        </p>
+      </v-flex>
+    </v-layout>
+    <v-layout row wrap>
+      <v-flex xs12 mb-4>
+        <EventsTable :events="events" @rowClick="eventSelected" />
+      </v-flex>
+      <v-fade-transition hide-on-leave>
+        <v-flex v-if="showForm" xs12>
+          <EventForm
+            :event="selectedEvent"
+            @closeForm="closeForm"
+            @eventSaved="eventSaved"
+          />
+        </v-flex>
+      </v-fade-transition>
+    </v-layout>
+  </v-container>
+</template>
+
+<script>
+import moment from "moment";
+import EventForm from "../components/EventForm";
+import EventsTable from "../components/EventsTable";
+
+export default {
+  components: {
+    EventForm,
+    EventsTable
+  },
+  name: "Events",
+  data() {
+    return {
+      events: [
+        {
+          startTime: "06:15",
+          endTime: "18:30",
+          type: "Lighting"
+        },
+        {
+          startTime: "06:30",
+          endTime: "06:35",
+          type: "Misting"
+        },
+        {
+          startTime: "09:25",
+          endTime: "09:30",
+          type: "Misting"
+        },
+        {
+          startTime: "12:40",
+          endTime: "12:45",
+          type: "Misting"
+        },
+        {
+          startTime: "14:00",
+          endTime: "14:05",
+          type: "Misting"
+        }
+      ],
+      saveMessage: "Event Saved.",
+      selectedEvent: null,
+      showForm: false,
+      showSaveNotification: false
+    };
+  },
+  computed: {
+    LightingEvents() {
+      return this.events.map(_ => _.type === "Lighting");
+    },
+    MistingEvents() {
+      return this.events.map(_ => _.type === "Misting");
+    },
+    eventChartOptions() {
+      return {
+        responsive: true
+      };
+    }
+  },
+  methods: {
+    closeForm() {
+      this.selectedEvent = null;
+      this.showForm = false;
+    },
+    eventSaved(message) {
+      this.saveMessage = message;
+      this.showSaveNotification = true;
+    },
+    eventSelected(event) {
+      this.selectedEvent = event;
+      this.showForm = true;
+    },
+    eventsChartData() {
+      let m = moment(new Date());
+      let year = m.get("year");
+      let month = m.get("month");
+      let day = 1;
+
+      return this.events.map(_ => {
+        let startTimes = _.startTime.split(":");
+
+        return {
+          x: new Date(year, month, day, +startTimes[0], +startTimes[1], 0),
+          y: +_.startTime.split(":")[0]
+        };
+      });
+    },
+    toggleForm() {
+      if (this.showForm) {
+        this.closeForm();
+      } else {
+        this.selectedEvent = {
+          startTime: "",
+          endTime: "",
+          type: "Misting"
+        };
+        this.showForm = true;
+      }
+    }
+  }
+};
+</script>
+<style lang="scss" scoped>
+div.relative {
+  position: relative;
+}
+</style>
