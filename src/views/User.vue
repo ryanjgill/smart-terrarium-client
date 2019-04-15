@@ -16,8 +16,41 @@
       </v-flex>
     </v-layout>
     <v-layout row wrap>
+      <v-snackbar v-model="showSaveNotification" :timeout="2400" top>
+        User Saved.
+        <v-btn color="pink" flat @click="showSaveNotification = false">
+          Close
+        </v-btn>
+      </v-snackbar>
+      <v-flex xs12 mb-2 class="relative">
+        <div class="display-1 font-weight-thin">Attributes</div>
+        <v-divider></v-divider>
+        <v-btn
+          absolute
+          dark
+          fab
+          top
+          right
+          small
+          color="primary form-fab"
+          @click="showForm = !showForm"
+        >
+          <v-icon v-if="!showForm">edit</v-icon>
+          <v-icon v-else>close</v-icon>
+        </v-btn>
+      </v-flex>
       <v-flex xs12>
-        <UserAttributes :user="user" />
+        <v-fade-transition hide-on-leave>
+          <UserAttributesDisplay v-if="!showForm" :user="user" />
+        </v-fade-transition>
+        <v-fade-transition hide-on-leave>
+          <UserAttributesForm
+            v-if="showForm"
+            :user="user"
+            @showSaveNotification="showSaveNotification = true"
+            @closeForm="showForm = false"
+          />
+        </v-fade-transition>
       </v-flex>
     </v-layout>
   </v-container>
@@ -25,11 +58,13 @@
 
 <script>
 import router from "vue-router";
-import UserAttributes from "../components/UserAttributes";
+import UserAttributesForm from "../components/UserAttributesForm";
+import UserAttributesDisplay from "../components/UserAttributesDisplay";
 
 export default {
   components: {
-    UserAttributes
+    UserAttributesForm,
+    UserAttributesDisplay
   },
   name: "Base",
   data() {
@@ -40,7 +75,9 @@ export default {
         animalName: "Curie",
         animalBirthdate: "2013-12-08",
         email: "ryanjgill2@gmail.com"
-      }
+      },
+      showForm: false,
+      showSaveNotification: false
     };
   },
   methods: {
@@ -50,3 +87,13 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.relative {
+  position: relative;
+}
+
+.form-fab.v-btn--top.v-btn--absolute.v-btn--small {
+  top: 20px;
+}
+</style>

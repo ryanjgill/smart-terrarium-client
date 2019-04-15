@@ -1,28 +1,5 @@
 <template>
   <v-layout v-if="user" row wrap class="relative">
-    <v-snackbar v-model="showSaveNotification" :timeout="2400" top>
-      {{ saveMessage }}
-      <v-btn color="pink" flat @click="showSaveNotification = false">
-        Close
-      </v-btn>
-    </v-snackbar>
-    <v-flex xs12 mb-2>
-      <div class="display-1 font-weight-thin">Attributes</div>
-      <v-divider></v-divider>
-    </v-flex>
-    <v-btn
-      absolute
-      dark
-      fab
-      top
-      right
-      small
-      color="primary"
-      @click="showForm = !showForm"
-    >
-      <v-icon v-if="!showForm">edit</v-icon>
-      <v-icon v-else>close</v-icon>
-    </v-btn>
     <v-flex xs6 pr-4>
       <v-text-field
         v-model="user.firstName"
@@ -83,7 +60,7 @@
         @keyup.esc="user.email = ''"
       ></v-text-field>
     </v-flex>
-    <v-flex v-if="showForm" xs12>
+    <v-flex xs12>
       <v-layout row align-start>
         <v-btn @click="updatedUser" color="primary">Save</v-btn>
         <v-btn @click="showForm = false">Cancel</v-btn>
@@ -108,7 +85,8 @@ export default {
   },
   computed: {
     disabled() {
-      return !this.showForm;
+      // add user permission check later
+      return false;
     },
     isEmailValid() {
       return (
@@ -148,8 +126,8 @@ export default {
     updatedUser() {
       // save here and then show notification and flip edit
       console.log(this.userPayload);
-      this.showSaveNotification = true;
-      this.showForm = false;
+      this.$emit("showSaveNotification");
+      this.$emit("closeForm");
     }
   }
 };

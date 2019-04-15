@@ -17,7 +17,7 @@
           top
           right
           small
-          color="primary"
+          color="primary form-fab"
           @click="toggleForm"
         >
           <v-icon v-if="!showForm" title="Add New Event">calendar_today</v-icon>
@@ -33,9 +33,20 @@
       </v-flex>
     </v-layout>
     <v-layout row wrap>
-      <v-flex xs12 mb-4>
-        <EventsTable :events="events" @rowClick="eventSelected" />
-      </v-flex>
+      <v-fade-transition hide-on-leave>
+        <v-flex xs12 mb-4 v-if="!showForm">
+          <div class="display-1 font-weight-thin">
+            Currently Scheduled Events
+          </div>
+          <v-divider class="mb-2"></v-divider>
+          <p class="grey--text text--darken-1">
+            Select an event to edit or click the event button to create a new
+            event.
+          </p>
+          <EventsTable :events="events" @rowClick="eventSelected" />
+          <timeline :data="timelineData" class="mt-4 timeline"></timeline>
+        </v-flex>
+      </v-fade-transition>
       <v-fade-transition hide-on-leave>
         <v-flex v-if="showForm" xs12>
           <EventForm
@@ -48,11 +59,15 @@
     </v-layout>
   </v-container>
 </template>
-
 <script>
 import moment from "moment";
 import EventForm from "../components/EventForm";
 import EventsTable from "../components/EventsTable";
+
+import Vue from "vue";
+import VueChartkick from "vue-chartkick";
+
+Vue.use(VueChartkick);
 
 export default {
   components: {
@@ -106,6 +121,26 @@ export default {
       return {
         responsive: true
       };
+    },
+    timelineData() {
+      let m = moment(new Date());
+      let year = m.get("year");
+      let month = m.get("month");
+      let day = 1;
+
+      return this.events.map(event => {
+        let startTimes = event.startTime.split(":");
+        let endTimes = event.endTime.split(":");
+        let startDate = new Date(
+          year,
+          month,
+          day,
+          startTimes[0],
+          startTimes[1]
+        );
+        let endDate = new Date(year, month, day, endTimes[0], endTimes[1]);
+        return [event.type, startDate, endDate];
+      });
     }
   },
   methods: {
@@ -151,8 +186,17 @@ export default {
   }
 };
 </script>
+
 <style lang="scss" scoped>
 div.relative {
   position: relative;
+}
+
+.timeline {
+  height: 150px !important;
+}
+
+.form-fab.v-btn--top.v-btn--absolute.v-btn--small {
+  top: 20px;
 }
 </style>
