@@ -63,7 +63,7 @@
     <v-flex xs12>
       <v-layout row align-start>
         <v-btn @click="updatedUser" color="primary">Save</v-btn>
-        <v-btn @click="showForm = false">Cancel</v-btn>
+        <v-btn @click="$emit('closeForm')">Cancel</v-btn>
       </v-layout>
     </v-flex>
   </v-layout>
@@ -79,7 +79,6 @@ export default {
     return {
       saveMessage: "Save Successful.",
       showAnimalBdayPicker: false,
-      showForm: false,
       showSaveNotification: false
     };
   },

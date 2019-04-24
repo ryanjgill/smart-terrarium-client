@@ -3,16 +3,17 @@
     <WelcomeBanner />
     <v-layout row wrap>
       <v-flex
-        xs6
+        xs12
+        md6
         v-for="(sensor, i) in sensors"
         :key="i"
-        :class="i % 2 === 0 ? 'pr-4' : ''"
+        :class="i % 2 === 0 ? 'pr-4 sensorDisplay' : ''"
       >
         <div class="display-1 font-weight-light text-uppercase">
           {{ sensor.name }}
         </div>
         <v-divider />
-        <v-layout row wrap>
+        <v-layout row wrap align-content-end>
           <v-flex xs8>
             <div class="trend">
               <Trend
@@ -25,7 +26,7 @@
           </v-flex>
           <v-flex xs4 text-xs-right>
             <span
-              class="display-4 font-weight-thin"
+              class="display-3 font-weight-thin"
               :class="`${sensor.color}--text`"
             >
               {{ sensor.data[sensor.data.length - 1] }}
@@ -116,6 +117,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@media screen and (max-width: 960px) {
+  div.sensorDisplay.pr-4 {
+    padding-right: 0 !important;
+  }
+}
+
 span.uom {
   vertical-align: top;
 }

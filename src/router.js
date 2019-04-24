@@ -12,6 +12,11 @@ export default new Router({
       component: Home
     },
     {
+      path: "/measurements",
+      name: "measurements",
+      component: () => import("./views/Measurements.vue")
+    },
+    {
       path: "/events",
       name: "events",
       component: () => import("./views/Events.vue")

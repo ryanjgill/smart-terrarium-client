@@ -20,7 +20,7 @@
           color="primary form-fab"
           @click="toggleForm"
         >
-          <v-icon v-if="!showForm" title="Add New Event">calendar_today</v-icon>
+          <v-icon v-if="!showForm" title="Add New Event">add</v-icon>
           <v-icon v-else title="Close Form">close</v-icon>
         </v-btn>
       </v-flex>
@@ -44,7 +44,11 @@
             event.
           </p>
           <EventsTable :events="events" @rowClick="eventSelected" />
-          <timeline :data="timelineData" class="mt-4 timeline"></timeline>
+          <timeline
+            :data="timelineData"
+            class="mt-4 timeline"
+            :colors="chartColors"
+          ></timeline>
         </v-flex>
       </v-fade-transition>
       <v-fade-transition hide-on-leave>
@@ -77,6 +81,7 @@ export default {
   name: "Events",
   data() {
     return {
+      chartColors: ["#FFC107", "#03A9F4"],
       events: [
         {
           startTime: "06:15",

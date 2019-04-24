@@ -1,7 +1,7 @@
 <template>
   <v-data-table :headers="headers" :items="formattedEvents" class="elevation-1">
     <template v-slot:items="props">
-      <tr @click="rowClick(props.item)">
+      <tr @click="rowClick(props.item)" :class="props.item.type">
         <td>{{ props.item.type }}</td>
         <td>{{ props.item.startTime }}</td>
         <td>{{ props.item.endTime }}</td>
@@ -73,5 +73,14 @@ export default {
 <style lang="scss" scoped>
 tbody tr:hover {
   cursor: pointer;
+}
+
+tbody {
+  tr.Lighting {
+    background: #fff8e1; // amber-lighten-5
+  }
+  tr.Misting {
+    background: #e1f5fe; // light-blue-lighten-5
+  }
 }
 </style>
