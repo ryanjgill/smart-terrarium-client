@@ -45,6 +45,7 @@
 <script>
 import WelcomeBanner from "../components/WelcomeBanner";
 import Trend from "vuetrend";
+import colors from "vuetify/es5/util/colors";
 
 function getRandomNumber(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -70,42 +71,66 @@ export default {
         {
           name: "Temperature",
           data: getMockData(65, 99, 30),
-          gradient: ["#BBDEFB", "#2196F3", "#0D47A1"],
+          gradient: [
+            colors.blue.lighten4,
+            colors.blue.base,
+            colors.blue.darken4
+          ],
           color: "blue",
           uom: "°F"
         },
         {
           name: "Humidity",
           data: getMockData(0, 100, 30),
-          gradient: ["#D1C4E9", "#673AB7", "#311B92"],
+          gradient: [
+            colors.deepPurple.lighten4,
+            colors.deepPurple.base,
+            colors.deepPurple.darken4
+          ],
           color: "deep-purple",
           uom: "%"
         },
         {
           name: "UV Index",
           data: getMockData(1, 11, 30),
-          gradient: ["#FFCCBC", "#FF5722", "#BF360C"],
+          gradient: [
+            colors.deepOrange.lighten4,
+            colors.deepOrange.base,
+            colors.deepOrange.darken4
+          ],
           color: "deep-orange",
           uom: "uv"
         },
         {
           name: "Soil Moisture",
           data: getMockData(0, 100, 30),
-          gradient: ["#DCEDC8", "#8BC34A", "#33691E"],
+          gradient: [
+            colors.lightGreen.lighten4,
+            colors.lightGreen.base,
+            colors.lightGreen.darken4
+          ],
           color: "light-green",
           uom: "%"
         },
         {
           name: "Mister Water Level",
           data: getMockData(0, 100, 30),
-          gradient: ["#C5CAE9", "#3F51B5", "#1A237E"],
+          gradient: [
+            colors.indigo.lighten4,
+            colors.indigo.base,
+            colors.indigo.darken4
+          ],
           color: "indigo",
           uom: "%"
         },
         {
           name: "Drain Water Level",
           data: getMockData(0, 100, 30),
-          gradient: ["#D7CCC8", "#795548", "#3E2723"],
+          gradient: [
+            colors.brown.lighten4,
+            colors.brown.base,
+            colors.brown.darken4
+          ],
           color: "brown",
           uom: "%"
         }
