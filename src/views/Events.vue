@@ -3,9 +3,9 @@
     <v-layout row wrap>
       <v-snackbar v-model="showSaveNotification" :timeout="2400" top>
         {{ saveMessage }}
-        <v-btn color="pink" flat @click="showSaveNotification = false">
-          Close
-        </v-btn>
+        <v-btn color="pink" flat @click="showSaveNotification = false"
+          >Close</v-btn
+        >
       </v-snackbar>
       <v-flex xs12 class="relative">
         <div class="display-1 font-weight-light text-uppercase">Events</div>
@@ -26,7 +26,7 @@
       </v-flex>
       <v-flex xs12>
         <p
-          class="title font-italic font-weight-medium pa-2 grey--text text--darken-2 "
+          class="title font-italic font-weight-medium pa-2 grey--text text--darken-2"
         >
           Schedule lighting and misting events.
         </p>

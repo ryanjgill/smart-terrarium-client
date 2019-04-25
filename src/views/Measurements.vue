@@ -9,7 +9,7 @@
       </v-flex>
       <v-flex xs12>
         <p
-          class="title font-italic font-weight-medium pa-2 grey--text text--darken-2 "
+          class="title font-italic font-weight-medium pa-2 grey--text text--darken-2"
         >
           Display a chart with measurements for this type of reading.
         </p>
@@ -38,11 +38,11 @@
   </v-container>
 </template>
 <script>
-import Vue from 'vue';
+import Vue from "vue";
 import VueApexCharts from "vue-apexcharts";
 
- Vue.component('apexchart', VueApexCharts)
- 
+Vue.component("apexchart", VueApexCharts);
+
 export default {
   name: "Measurements",
   data() {

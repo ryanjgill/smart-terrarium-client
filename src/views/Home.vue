@@ -28,9 +28,8 @@
             <span
               class="display-3 font-weight-thin"
               :class="`${sensor.color}--text`"
+              >{{ sensor.data[sensor.data.length - 1] }}</span
             >
-              {{ sensor.data[sensor.data.length - 1] }}
-            </span>
             <span
               class="uom display-1 font-weight-thin"
               :class="`${sensor.color}--text`"
