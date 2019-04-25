@@ -68,6 +68,11 @@ export default {
       measurementType: "temperature"
     };
   },
+  created() {
+    if (this.$route.query && this.$route.query.type) {
+      this.measurementType = this.$route.query.type;
+    }
+  },
   computed: {
     selectOptions() {
       return this.chartTypesForButtons.map(type => {

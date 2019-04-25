@@ -1,40 +1,33 @@
 <template>
   <div>
-    <WelcomeBanner />
+    <WelcomeBanner/>
     <v-layout row wrap>
       <v-flex
         xs12
         md6
         v-for="(sensor, i) in sensors"
         :key="i"
-        :class="i % 2 === 0 ? 'pr-4 sensorDisplay' : ''"
+        class="sensorDisplay"
+        :class="i % 2 === 0 ? 'pr-4' : ''"
+        @click="routeToMeasurements(sensor.type)"
       >
-        <div class="display-1 font-weight-light text-uppercase">
-          {{ sensor.name }}
-        </div>
-        <v-divider />
+        <div class="display-1 font-weight-light text-uppercase">{{ sensor.name }}</div>
+        <v-divider/>
         <v-layout row wrap align-content-end>
           <v-flex xs8>
             <div class="trend">
-              <Trend
-                :data="sensor.data"
-                :gradient="sensor.gradient"
-                auto-draw
-                smooth
-              />
+              <Trend :data="sensor.data" :gradient="sensor.gradient" auto-draw smooth/>
             </div>
           </v-flex>
           <v-flex xs4 text-xs-right>
             <span
               class="display-3 font-weight-thin"
               :class="`${sensor.color}--text`"
-              >{{ sensor.data[sensor.data.length - 1] }}</span
-            >
+            >{{ sensor.data[sensor.data.length - 1] }}</span>
             <span
               class="uom display-1 font-weight-thin"
               :class="`${sensor.color}--text`"
-              >{{ sensor.uom }}</span
-            >
+            >{{ sensor.uom }}</span>
           </v-flex>
         </v-layout>
       </v-flex>
@@ -70,6 +63,7 @@ export default {
       sensors: [
         {
           name: "Temperature",
+          type: "temperature",
           data: getMockData(65, 99, 30),
           gradient: [
             colors.blue.lighten4,
@@ -81,6 +75,7 @@ export default {
         },
         {
           name: "Humidity",
+          type: "humidity",
           data: getMockData(0, 100, 30),
           gradient: [
             colors.deepPurple.lighten4,
@@ -92,6 +87,7 @@ export default {
         },
         {
           name: "UV Index",
+          type: "uvIndex",
           data: getMockData(1, 11, 30),
           gradient: [
             colors.deepOrange.lighten4,
@@ -103,6 +99,7 @@ export default {
         },
         {
           name: "Soil Moisture",
+          type: "soilMoisture",
           data: getMockData(0, 100, 30),
           gradient: [
             colors.lightGreen.lighten4,
@@ -114,6 +111,7 @@ export default {
         },
         {
           name: "Mister Water Level",
+          type: "misterWaterLevel",
           data: getMockData(0, 100, 30),
           gradient: [
             colors.indigo.lighten4,
@@ -125,6 +123,7 @@ export default {
         },
         {
           name: "Drain Water Level",
+          type: "drainWaterLevel",
           data: getMockData(0, 100, 30),
           gradient: [
             colors.brown.lighten4,
@@ -136,11 +135,26 @@ export default {
         }
       ]
     };
+  },
+  methods: {
+    routeToMeasurements(type) {
+      this.$router.push({
+        path: "/measurements",
+        query: {
+          type
+        }
+      });
+    }
   }
 };
 </script>
 
 <style lang="scss" scoped>
+div.sensorDisplay {
+  &:hover {
+    cursor: pointer;
+  }
+}
 @media screen and (max-width: 960px) {
   div.sensorDisplay.pr-4 {
     padding-right: 0 !important;
