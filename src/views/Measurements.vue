@@ -22,7 +22,7 @@
       </v-flex>
     </v-layout>
 
-    <v-layout justify-space-between class="hidden-sm-and-down">
+    <v-layout justify-center class="hidden-sm-and-down">
       <v-btn-toggle v-model="measurementType" mandatory>
         <v-btn
           :value="type"
@@ -65,6 +65,7 @@ export default {
   name: "Measurements",
   data() {
     return {
+      allMeasurements: [],
       measurementType: "temperature"
     };
   },
@@ -72,6 +73,7 @@ export default {
     if (this.$route.query && this.$route.query.type) {
       this.measurementType = this.$route.query.type;
     }
+    this.getAllMeasurements();
   },
   computed: {
     selectOptions() {
@@ -90,23 +92,23 @@ export default {
         },
         humidity: {
           color: colors.deepPurple.base,
-          data: this.temperatureData
+          data: this.humidityData
         },
         uvIndex: {
           color: colors.deepOrange.base,
-          data: this.temperatureData
+          data: this.uvIndexData
         },
         soilMoisture: {
           color: colors.lightGreen.base,
-          data: this.temperatureData
+          data: this.soilMoistureData
         },
         misterWaterLevel: {
           color: colors.indigo.base,
-          data: this.temperatureData
+          data: this.misterWaterLevelData
         },
         drainWaterLevel: {
           color: colors.brown.base,
-          data: this.temperatureData
+          data: this.drainWaterLevelData
         }
       };
     },
@@ -120,29 +122,55 @@ export default {
       };
     },
     series() {
+      return [];
+    },
+    humidityData() {
       return [
         {
-          data: this.generateDayWiseTimeSeries(
-            new Date("11 Feb 2019").getTime(),
-            185,
-            {
-              min: 30,
-              max: 90
-            }
-          )
+          data: this.allMeasurements.map(m => [m.date, m.humidity]),
+          name: "Humidity"
+        }
+      ];
+    },
+    misterWaterLevelData() {
+      return [
+        {
+          data: this.allMeasurements.map(m => [m.date, m.misterWaterLevel]),
+          name: "Mister Water Level"
+        }
+      ];
+    },
+    drainWaterLevelData() {
+      return [
+        {
+          data: this.allMeasurements.map(m => [m.date, m.drainWaterLevel]),
+          name: "Drain Water Level"
         }
       ];
     },
     temperatureData() {
-      return this.series;
+      return [
+        {
+          data: this.allMeasurements.map(m => [m.date, m.probeA]),
+          name: "Temperature"
+        }
+      ];
+    },
+    uvIndexData() {
+      return [
+        {
+          data: this.allMeasurements.map(m => [m.date, m.uvIndex]),
+          name: "UV Index"
+        }
+      ];
     },
     chartOptionsArea() {
       return {
         chart: {
           id: "chartArea",
           toolbar: {
-            autoSelected: "pan",
-            show: false
+            autoSelected: "zoom",
+            show: true
           }
         },
         colors: [this.selectedChartInfo.color],
@@ -172,11 +200,7 @@ export default {
             enabled: true
           },
           selection: {
-            enabled: true,
-            xaxis: {
-              min: new Date("19 Jun 2019").getTime(),
-              max: new Date("14 Aug 2019").getTime()
-            }
+            enabled: true
           }
         },
         colors: [this.selectedChartInfo.color],
@@ -205,22 +229,10 @@ export default {
         return str.toUpperCase();
       });
     },
-    generateDayWiseTimeSeries: function(baseval, count, yrange) {
-      var i = 0;
-      var series = [];
-      while (i < count) {
-        var x = baseval;
-        var y =
-          Math.floor(Math.random() * (yrange.max - yrange.min + 1)) +
-          yrange.min;
-
-        series.push([x, y]);
-        baseval += 86400000;
-        i++;
-      }
-
-      //console.log(series);
-      return series;
+    getAllMeasurements() {
+      fetch("http://localhost:3030/measurements")
+        .then(response => response.json())
+        .then(results => (this.allMeasurements = results));
     }
   }
 };
