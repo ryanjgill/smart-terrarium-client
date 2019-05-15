@@ -14,10 +14,18 @@
         <div class="display-1 font-weight-light text-uppercase">{{ sensor.name }}</div>
         <v-divider/>
         <v-layout row wrap align-content-end>
-          <v-flex xs8>
+          <v-flex xs8 class="sparkline">
             <div class="trend">
               <Trend :data="sensor.data" :gradient="sensor.gradient" auto-draw smooth/>
             </div>
+            <span
+              class="min font-weight-thin"
+              :class="`${sensor.color}--text text--lighten-1`"
+            >{{ sensor.min }}</span>
+            <span
+              class="max font-weight-thin"
+              :class="`${sensor.color}--text text--darken-1`"
+            >{{ sensor.max }}</span>
           </v-flex>
           <v-flex xs4 text-xs-right>
             <span
@@ -60,83 +68,140 @@ export default {
   },
   data() {
     return {
-      sensors: [
+      allMeasurements: []
+    };
+  },
+  created() {
+    this.fetchSparklineData();
+  },
+  computed: {
+    sensors() {
+      return [
         {
           name: "Temperature",
           type: "temperature",
-          data: getMockData(65, 99, 30),
+          data: this.temperatureSparkline,
           gradient: [
             colors.blue.lighten4,
             colors.blue.base,
             colors.blue.darken4
           ],
           color: "blue",
-          uom: "°F"
+          uom: "°C",
+          min: this.getMin(this.temperatureSparkline),
+          max: this.getMax(this.temperatureSparkline)
         },
         {
           name: "Humidity",
           type: "humidity",
-          data: getMockData(0, 100, 30),
+          data: this.humiditySparkline,
           gradient: [
             colors.deepPurple.lighten4,
             colors.deepPurple.base,
             colors.deepPurple.darken4
           ],
           color: "deep-purple",
-          uom: "%"
+          uom: "%",
+          min: this.getMin(this.humiditySparkline),
+          max: this.getMax(this.humiditySparkline)
         },
         {
           name: "UV Index",
           type: "uvIndex",
-          data: getMockData(1, 11, 30),
+          data: this.uvIndexSparkline,
           gradient: [
             colors.deepOrange.lighten4,
             colors.deepOrange.base,
             colors.deepOrange.darken4
           ],
           color: "deep-orange",
-          uom: "uv"
+          uom: "uv",
+          min: this.getMin(this.uvIndexSparkline),
+          max: this.getMax(this.uvIndexSparkline)
         },
         {
           name: "Soil Moisture",
           type: "soilMoisture",
-          data: getMockData(0, 100, 30),
+          data: this.soilMoistureSparkline,
           gradient: [
             colors.lightGreen.lighten4,
             colors.lightGreen.base,
             colors.lightGreen.darken4
           ],
           color: "light-green",
-          uom: "%"
+          uom: "%",
+          min: this.getMin(this.soilMoistureSparkline),
+          max: this.getMax(this.soilMoistureSparkline)
         },
         {
           name: "Mister Water Level",
           type: "misterWaterLevel",
-          data: getMockData(0, 100, 30),
+          data: this.misterWaterLevelSparkline,
           gradient: [
             colors.indigo.lighten4,
             colors.indigo.base,
             colors.indigo.darken4
           ],
           color: "indigo",
-          uom: "%"
+          uom: "%",
+          min: this.getMin(this.misterWaterLevelSparkline),
+          max: this.getMax(this.misterWaterLevelSparkline)
         },
         {
           name: "Drain Water Level",
           type: "drainWaterLevel",
-          data: getMockData(0, 100, 30),
+          data: this.drainWaterLevelSparkline,
           gradient: [
             colors.brown.lighten4,
             colors.brown.base,
             colors.brown.darken4
           ],
           color: "brown",
-          uom: "%"
+          uom: "%",
+          min: this.getMin(this.drainWaterLevelSparkline),
+          max: this.getMax(this.drainWaterLevelSparkline)
         }
-      ]
-    };
+      ];
+    },
+    drainWaterLevelSparkline() {
+      return this.allMeasurements.map(m => +m.drainWaterLevel);
+    },
+    humiditySparkline() {
+      return this.allMeasurements.map(m => +m.humidity);
+    },
+    misterWaterLevelSparkline() {
+      return this.allMeasurements.map(m => +m.misterWaterLevel);
+    },
+    soilMoistureSparkline() {
+      return this.allMeasurements.map(
+        m => +m.soilMoisture || getRandomNumber(20, 85)
+      );
+    },
+    temperatureSparkline() {
+      return this.allMeasurements.map(m => +m.temperature);
+    },
+    uvIndexSparkline() {
+      return this.allMeasurements.map(m => +m.uvIndex);
+    }
   },
   methods: {
+    fetchSparklineData() {
+      fetch("http://localhost:3030/sparklines")
+        .then(response => response.json())
+        .then(results => (this.allMeasurements = results));
+    },
+    getMin(values) {
+      return values.reduce((out, temp, index) => {
+        out = temp < out ? temp : out;
+        return out;
+      }, Infinity);
+    },
+    getMax(values) {
+      return values.reduce((out, temp, index) => {
+        out = temp > out ? temp : out;
+        return out;
+      }, 0);
+    },
     routeToMeasurements(type) {
       this.$router.push({
         path: "/measurements",
@@ -155,6 +220,23 @@ div.sensorDisplay {
     cursor: pointer;
   }
 }
+
+.sparkline {
+  position: relative;
+
+  .min,
+  .max {
+    position: absolute;
+    left: 0;
+    bottom: 1rem;
+    font-size: 1rem;
+  }
+
+  .max {
+    top: 0;
+  }
+}
+
 @media screen and (max-width: 960px) {
   div.sensorDisplay.pr-4 {
     padding-right: 0 !important;
