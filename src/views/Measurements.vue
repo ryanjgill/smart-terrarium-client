@@ -238,7 +238,7 @@ export default {
       });
     },
     getAllMeasurements() {
-      fetch("http://localhost:3030/measurements")
+      fetch("http://192.168.86.127:3030/measurements")
         .then(response => response.json())
         .then(results => (this.allMeasurements = results));
     }

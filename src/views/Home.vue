@@ -186,7 +186,7 @@ export default {
   },
   methods: {
     fetchSparklineData() {
-      fetch("http://localhost:3030/sparklines")
+      fetch("http://192.168.86.127:3030/sparklines")
         .then(response => response.json())
         .then(results => (this.allMeasurements = results));
     },
