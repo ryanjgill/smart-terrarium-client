@@ -140,6 +140,14 @@ export default {
         }
       ];
     },
+    soilMoistureData() {
+      return [
+        {
+          data: this.allMeasurements.map(m => [m.date, m.soilMoisture]),
+          name: "Soil Moisture"
+        }
+      ];
+    },
     drainWaterLevelData() {
       return [
         {
@@ -151,7 +159,7 @@ export default {
     temperatureData() {
       return [
         {
-          data: this.allMeasurements.map(m => [m.date, m.probeA]),
+          data: this.allMeasurements.map(m => [m.date, m.temperature]),
           name: "Temperature"
         }
       ];
@@ -233,6 +241,19 @@ export default {
       fetch("http://localhost:3030/measurements")
         .then(response => response.json())
         .then(results => (this.allMeasurements = results));
+    }
+  },
+  watch: {
+    measurementType(type) {
+      this.$router.push({
+        path: this.$route.path,
+        query: {
+          type
+        }
+      });
+    },
+    "$route.query"(query) {
+      this.measurementType = query.type;
     }
   }
 };
