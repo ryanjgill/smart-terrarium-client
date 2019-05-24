@@ -1,13 +1,13 @@
 <template>
   <div>
     <WelcomeBanner/>
-    <v-layout row wrap>
+    <v-layout row wrap ma-4>
       <v-flex
         xs12
         md6
         v-for="(sensor, i) in sensors"
         :key="i"
-        class="sensorDisplay"
+        class="sensorDisplay pb-4"
         :class="i % 2 === 0 ? 'pr-4' : ''"
         @click="routeToMeasurements(sensor.type)"
       >

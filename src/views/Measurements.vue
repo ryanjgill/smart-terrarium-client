@@ -253,7 +253,7 @@ export default {
       });
     },
     "$route.query"(query) {
-      this.measurementType = query.type;
+      this.measurementType = query.type || "temperature";
     }
   }
 };
