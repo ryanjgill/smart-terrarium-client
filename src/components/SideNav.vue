@@ -1,10 +1,6 @@
 <template>
   <v-list dense>
-    <v-list-tile
-      v-for="(link, index) in navLinks"
-      :key="index"
-      @click="routeTo(link.path)"
-    >
+    <v-list-tile v-for="(link, index) in navLinks" :key="index" @click="routeTo(link.path)">
       <v-list-tile-action>
         <v-icon>{{ link.icon }}</v-icon>
       </v-list-tile-action>
@@ -37,6 +33,11 @@ export default {
           icon: "calendar_today",
           title: "Events",
           path: "/events"
+        },
+        {
+          icon: "settings_input_component",
+          title: "Controls",
+          path: "/controls"
         },
         {
           icon: "supervised_user_circle",

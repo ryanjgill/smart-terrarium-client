@@ -22,6 +22,11 @@ export default new Router({
       component: () => import("./views/Events.vue")
     },
     {
+      path: "/controls",
+      name: "controls",
+      component: () => import("./views/Controls.vue")
+    },
+    {
       path: "/user",
       name: "user",
       component: () => import("./views/User.vue")
